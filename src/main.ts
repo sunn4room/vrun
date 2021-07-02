@@ -1,32 +1,73 @@
-"use strict";
-
-import { app, protocol, BrowserWindow } from "electron";
+import path from "path";
+import { app, BrowserWindow, Tray, Menu } from "electron";
 import { createProtocol } from "vue-cli-plugin-electron-builder/lib";
-const isDevelopment = process.env.NODE_ENV !== "production";
 
-// Scheme must be registered before the app is ready
-protocol.registerSchemesAsPrivileged([
-  { scheme: "app", privileges: { secure: true, standard: true } },
-]);
+// avoid tray object dispear against garbage collection
+let tray: Tray;
 
-async function createWindow() {
+function createWindow() {
   // Create the browser window.
   const win = new BrowserWindow({
-    width: 800,
-    height: 600,
+    frame: false,
+    movable: false,
+    skipTaskbar: true,
+    hasShadow: true,
+    show: true,
     webPreferences: {
-      // Use pluginOptions.nodeIntegration, leave this alone
-      // See nklayman.github.io/vue-cli-plugin-electron-builder/guide/security.html#node-integration for more info
-      nodeIntegration: process.env
-        .ELECTRON_NODE_INTEGRATION as unknown as boolean,
-      contextIsolation: !process.env.ELECTRON_NODE_INTEGRATION,
+      nodeIntegration: true,
+      contextIsolation: false,
+      webSecurity: false,
     },
+  });
+
+  // linux need reset this option
+  win.setSkipTaskbar(true);
+
+  // switch window to show or hide
+  const switchWindow = () => {
+    if (win.isVisible()) {
+      win.hide();
+    } else {
+      win.show();
+    }
+  };
+
+  // ipcMain
+
+  // create a tray object
+  tray = new Tray(path.join(__static, "vrun-tray.png"));
+  tray.setToolTip("jrun");
+  tray.setContextMenu(
+    Menu.buildFromTemplate([
+      {
+        label: "Show / Hide",
+        click: switchWindow,
+      },
+      {
+        label: "Quit",
+        click: () => {
+          app.quit();
+        },
+      },
+    ])
+  );
+
+  // window event
+  win.on("close", () => {
+    win.webContents.send("close");
+  });
+
+  // win.on("blur", () => {
+  //   win.hide();
+  // });
+
+  win.on("show", () => {
+    win.webContents.send("show");
   });
 
   if (process.env.WEBPACK_DEV_SERVER_URL) {
     // Load the url of the dev server if in development mode
-    await win.loadURL(process.env.WEBPACK_DEV_SERVER_URL as string);
-    if (!process.env.IS_TEST) win.webContents.openDevTools();
+    win.loadURL(process.env.WEBPACK_DEV_SERVER_URL as string);
   } else {
     createProtocol("app");
     // Load the index.html when not in development
@@ -52,12 +93,10 @@ app.on("activate", () => {
 // This method will be called when Electron has finished
 // initialization and is ready to create browser windows.
 // Some APIs can only be used after this event occurs.
-app.on("ready", async () => {
-  createWindow();
-});
+app.on("ready", createWindow);
 
 // Exit cleanly on request from parent process in development mode.
-if (isDevelopment) {
+if (process.env.NODE_ENV === "development") {
   if (process.platform === "win32") {
     process.on("message", (data) => {
       if (data === "graceful-exit") {

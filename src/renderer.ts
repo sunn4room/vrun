@@ -1,6 +1,6 @@
 import vrun from "@/vrun";
 import { createApp } from "vue";
-import App from "./App.vue";
+import App from "./app/App.vue";
 
 const logger = vrun.Log.getLogger("renderer.ts");
 logger.trace("vrun:", vrun);

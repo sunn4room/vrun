@@ -5,18 +5,20 @@ import App from "./App.vue";
 const logger = vrun.Log.getLogger("renderer.ts");
 logger.trace("vrun:", vrun);
 
-vrun.addConfigItem({
-  name: "core.width",
-  value: 800,
-  validator: (value) => {
-    if (typeof value === "number" && value < 1000 && value > 500) {
-      return true;
-    } else {
-      return false;
-    }
-  },
+vrun.registerPlugin({
+  uuid: "55991ead-af5d-4c0e-89b6-da1b1932d593",
+  name: "sunny",
+  icon: "",
+  keyword: "sn",
+  configItems: [
+    {
+      name: "room",
+      value: "room",
+      watcher: (newValue, oldValue) => {
+        logger.debug("new: %o, old: %o", newValue, oldValue);
+      },
+    },
+  ],
 });
-
-vrun.set("core.width", 1000);
 
 createApp(App).mount("#app");

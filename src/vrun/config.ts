@@ -1,5 +1,5 @@
 import path from "path";
-import { reactive } from "vue";
+import { reactive, watch } from "vue";
 import _ from "lodash";
 import { VHOME } from "./const";
 import { loadDB, Log } from "./util";
@@ -13,6 +13,7 @@ export interface VConfigItem {
   validator?: (value: any) => boolean;
   next?: (value: any) => any;
   prev?: (value: any) => any;
+  watcher?: (newValue: any, oldValue: any) => any;
 }
 
 const config = reactive(new Map<string, VConfigItem>());
@@ -31,7 +32,18 @@ export function addConfigItem(item: VConfigItem): void {
     item.value = customValue;
     logger.trace("apply %s from %o to %o", item.name, value, customValue);
   }
+  if (item.watcher) {
+    watch(() => _.cloneDeep(get(item.name)), item.watcher, {
+      immediate: true,
+    });
+  }
   logger.trace("add config item:", item);
+}
+
+export function addConfigItems(items: VConfigItem[]): void {
+  for (const item of items) {
+    addConfigItem(item);
+  }
 }
 
 export function get(name: string): any {
@@ -56,3 +68,24 @@ function validate(item: VConfigItem, value: any): boolean {
     return true;
   }
 }
+
+const buildinConfigItems: VConfigItem[] = [
+  {
+    name: "app.font",
+    value: "ubuntu",
+  },
+  {
+    name: "cell.width",
+    value: 700,
+  },
+  {
+    name: "cell.height",
+    value: 50,
+  },
+  {
+    name: "entry.max",
+    value: 10,
+  },
+];
+
+addConfigItems(buildinConfigItems);

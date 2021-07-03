@@ -1,5 +1,13 @@
 import path from "path";
-import { app, BrowserWindow, Tray, Menu } from "electron";
+import {
+  app,
+  BrowserWindow,
+  ipcMain,
+  Tray,
+  Menu,
+  screen,
+  globalShortcut,
+} from "electron";
 import { createProtocol } from "vue-cli-plugin-electron-builder/lib";
 
 // avoid tray object dispear against garbage collection
@@ -10,9 +18,10 @@ function createWindow() {
   const win = new BrowserWindow({
     frame: false,
     movable: false,
+    resizable: true,
     skipTaskbar: true,
     hasShadow: true,
-    show: true,
+    show: false,
     webPreferences: {
       nodeIntegration: true,
       contextIsolation: false,
@@ -33,6 +42,33 @@ function createWindow() {
   };
 
   // ipcMain
+  ipcMain.on("getScreenSize", (event) => {
+    const size = screen.getPrimaryDisplay().size;
+    event.returnValue = [size.width, size.height];
+  });
+
+  ipcMain.on("setHotkey", (event, shortcut: string) => {
+    globalShortcut.unregisterAll();
+    globalShortcut.register(shortcut, switchWindow);
+  });
+
+  ipcMain.on("setSize", (event, width: number, height: number) => {
+    win.setSize(width, height);
+  });
+
+  ipcMain.on("setPosition", (event, x: number, y: number) => {
+    win.setPosition(x, y);
+  });
+
+  ipcMain.on("hideWindow", () => {
+    win.hide();
+  });
+
+  ipcMain.on("showWindow", () => {
+    win.show();
+  });
+
+  ipcMain.on("switchWindow", switchWindow);
 
   // create a tray object
   tray = new Tray(path.join(__static, "vrun-tray.png"));

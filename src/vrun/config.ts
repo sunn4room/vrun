@@ -1,7 +1,8 @@
 import path from "path";
 import { reactive, watch } from "vue";
+import { ipcRenderer } from "electron";
 import _ from "lodash";
-import { VHOME } from "./const";
+import { VHOME, screenWidth, screenHeight } from "./const";
 import { loadDB, Log } from "./util";
 
 const logger = Log.getLogger("config");
@@ -14,6 +15,7 @@ export interface VConfigItem {
   next?: (value: any) => any;
   prev?: (value: any) => any;
   watcher?: (newValue: any, oldValue: any) => any;
+  watchImmediate?: boolean;
 }
 
 const config = reactive(new Map<string, VConfigItem>());
@@ -34,7 +36,7 @@ export function addConfigItem(item: VConfigItem): void {
   }
   if (item.watcher) {
     watch(() => _.cloneDeep(get(item.name)), item.watcher, {
-      immediate: true,
+      immediate: item.watchImmediate === undefined ? true : item.watchImmediate,
     });
   }
   logger.trace("add config item:", item);
@@ -73,19 +75,48 @@ const buildinConfigItems: VConfigItem[] = [
   {
     name: "app.font",
     value: "ubuntu",
+    description: "UI font",
+  },
+  {
+    name: "app.hotkey",
+    value: "alt+a",
+    description: "the keymap of hide or show the window",
+    watcher: (newValue: string) => {
+      logger.debug(newValue);
+      ipcRenderer.send("setHotkey", newValue);
+    },
   },
   {
     name: "cell.width",
     value: 700,
+    description: "the width of a single cell",
+    watcher: setPosition,
+    watchImmediate: false,
   },
   {
     name: "cell.height",
     value: 50,
+    description: "the height of a single cell",
+    watcher: setPosition,
+    watchImmediate: false,
   },
   {
-    name: "entry.max",
+    name: "item.max",
     value: 10,
+    description: "the max number of visible item",
+    watcher: setPosition,
+    watchImmediate: false,
   },
 ];
 
 addConfigItems(buildinConfigItems);
+
+function setPosition() {
+  const screenx = (screenWidth - get("cell.width")) / 2;
+  const screeny =
+    (screenHeight - get("cell.height") * (1 + get("item.max"))) / 2;
+  ipcRenderer.send("setPosition", screenx, screeny);
+  logger.trace("window rePosition to:", screenx, screeny);
+}
+
+setPosition();

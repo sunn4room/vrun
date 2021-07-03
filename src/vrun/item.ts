@@ -5,9 +5,17 @@ import { Log } from "./util";
 
 const logger = Log.getLogger("item");
 
-interface VItem {
+export interface VItem {
+  parent?: VItem;
   name: string;
-  description: string;
+  description?: string;
+  icon?: string;
+  value?: any;
+  valueDesc?: {
+    type: string;
+    [prop: string]: any;
+  };
+  [prop: string]: any;
 }
 
 export const items = reactive(new Array<VItem>());

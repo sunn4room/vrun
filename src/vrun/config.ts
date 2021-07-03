@@ -74,7 +74,8 @@ function validate(item: VConfigItem, value: any): boolean {
 const buildinConfigItems: VConfigItem[] = [
   {
     name: "app.font",
-    value: "ubuntu",
+    value:
+      "system-ui,-apple-system,BlinkMacSystemFont,Microsoft YaHei,Segoe UI,Roboto,Oxygen,Ubuntu,Cantarell,Fira Sans,Droid Sans,Helvetica Neue,sans-serif",
     description: "UI font",
   },
   {

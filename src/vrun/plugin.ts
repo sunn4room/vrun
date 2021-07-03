@@ -1,4 +1,5 @@
 import { VConfigItem, addConfigItem } from "./config";
+import { VItem } from "./item";
 import { Log } from "./util";
 
 const logger = Log.getLogger("plugin");
@@ -11,7 +12,14 @@ interface VPlugin {
   keywordConfigurable?: boolean;
   configItems?: VConfigItem[];
   description?: string;
+  useHot?: boolean;
   afterRegister?: () => any;
+  afterEnter?: () => void;
+  beforeLeave?: () => void;
+  search?: (searchword: string) => any;
+  enter?: (item: VItem) => any;
+  exit?: (item: VItem) => any;
+  handle?: (item: VItem, msg: string) => any;
 }
 
 const plugin = new Map<string, VPlugin>();

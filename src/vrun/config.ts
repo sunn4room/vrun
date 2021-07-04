@@ -10,6 +10,10 @@ const logger = Log.getLogger("config");
 export interface VConfigItem {
   name: string;
   value: any;
+  valueDesc?: {
+    type: string;
+    [prop: string]: any;
+  };
   description?: string;
   validator?: (value: any) => boolean;
   next?: (value: any) => any;
@@ -107,6 +111,88 @@ const buildinConfigItems: VConfigItem[] = [
     description: "the max number of visible item",
     watcher: setPosition,
     watchImmediate: false,
+  },
+  {
+    name: "color.background1",
+    value: "#FFFFFF",
+    description: "the background color of main cell",
+  },
+  {
+    name: "color.background2",
+    value: "#EEEEEE",
+    description: "the background color of item cell",
+  },
+  {
+    name: "color.background3",
+    value: "#DDDDDD",
+    description: "the background color of selected item cell",
+  },
+  {
+    name: "color.foreground1",
+    value: "#000000",
+    description:
+      "the foreground color of font, include input of main cell and name of item cell",
+  },
+  {
+    name: "color.foreground2",
+    value: "#333333",
+    description: "the foreground color of item cell's description",
+  },
+  {
+    name: "color.foreground3",
+    value: "red",
+    description: "the theme color of app, example red, green...",
+  },
+  {
+    name: "keymap.typeInterval",
+    value: 500,
+    description: "the time interval to wait special key when type",
+  },
+  {
+    name: "keymap.type2select",
+    value: "j",
+    description: "the keymap to focus select mode when type",
+  },
+  {
+    name: "keymap.typeClear",
+    value: "d",
+    description: "the keymap to clear type input when type",
+  },
+  {
+    name: "keymap.select2type",
+    value: "a",
+  },
+  {
+    name: "keymap.selectUp",
+    value: "k",
+  },
+  {
+    name: "keymap.selectDown",
+    value: "j",
+  },
+  {
+    name: "keymap.selectPageUp",
+    value: "K",
+  },
+  {
+    name: "keymap.selectPageDown",
+    value: "J",
+  },
+  {
+    name: "keymap.selectFirst",
+    value: "g",
+  },
+  {
+    name: "keymap.selectLast",
+    value: "G",
+  },
+  {
+    name: "keymap.selectEnter",
+    value: "l",
+  },
+  {
+    name: "keymap.selectExit",
+    value: "h",
   },
 ];
 

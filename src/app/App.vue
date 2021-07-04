@@ -1,15 +1,18 @@
 <template>
   <main-cell />
+  <item-cell-panel />
 </template>
 
 <script lang="ts">
 import { defineComponent } from "vue";
 import MainCell from "./MainCell.vue";
+import ItemCellPanel from "./ItemCellPanel.vue";
 
 export default defineComponent({
   name: "App",
   components: {
     MainCell,
+    ItemCellPanel,
   },
 });
 </script>

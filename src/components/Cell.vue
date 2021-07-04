@@ -1,6 +1,8 @@
 <template>
   <div class="cell" :style="cellStyle">
-    <slot />
+    <div class="cell_head"><slot name="head" /></div>
+    <div class="cell_main"><slot name="main" /></div>
+    <div class="cell_tail"><slot name="tail" /></div>
   </div>
 </template>
 
@@ -28,5 +30,9 @@ export default defineComponent({
 .cell {
   display: flex;
   align-items: center;
+}
+
+.cell_main {
+  flex-grow: 1;
 }
 </style>

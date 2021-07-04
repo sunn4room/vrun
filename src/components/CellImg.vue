@@ -1,8 +1,8 @@
 <template>
   <img
-    class="cell_icon"
+    class="cell_img"
     :style="iconStyle"
-    :src="url"
+    :src="value"
     :onerror="onErrorScript"
   />
 </template>
@@ -13,9 +13,9 @@ import vrun from "@/vrun";
 import onError from "@/assets/onerror.png";
 
 export default defineComponent({
-  name: "CellIcon",
+  name: "CellImg",
   props: {
-    url: {
+    value: {
       type: String,
       required: true,
     },

@@ -11,6 +11,7 @@ interface VPlugin {
   name: string;
   icon: string;
   keyword: string;
+  debounce?: number;
   keywordConfigurable?: boolean;
   configItems?: VConfigItem[];
   description?: string;

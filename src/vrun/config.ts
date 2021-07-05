@@ -104,6 +104,51 @@ const validateBoolean = (value: any): boolean => {
 
 const buildinConfigItems: VConfigItem[] = [
   {
+    name: "app.showOnStartup",
+    value: false,
+    valueDesc: {
+      type: "switch",
+    },
+    description: "whether show the window on startup",
+    validator: validateBoolean,
+    next: (value: boolean) => !value,
+    prev: (value: boolean) => !value,
+  },
+  {
+    name: "app.clearOnHide",
+    value: true,
+    valueDesc: {
+      type: "switch",
+    },
+    description: "whether clear type input when window hide",
+    validator: validateBoolean,
+    next: (value: boolean) => !value,
+    prev: (value: boolean) => !value,
+  },
+  {
+    name: "app.debounce",
+    value: 100,
+    valueDesc: {
+      type: "slider",
+      min: 100,
+      max: 1000,
+    },
+    description: "the debounce time of type input, unit is ms",
+    validator: (value: any) => {
+      if (typeof value === "number") {
+        if (value < 100 || value > 1000) {
+          return false;
+        } else {
+          return true;
+        }
+      } else {
+        return false;
+      }
+    },
+    next: (value: number) => value + 100,
+    prev: (value: number) => value - 100,
+  },
+  {
     name: "app.font",
     value:
       "system-ui,-apple-system,BlinkMacSystemFont,Microsoft YaHei,Segoe UI,Roboto,Oxygen,Ubuntu,Cantarell,Fira Sans,Droid Sans,Helvetica Neue,sans-serif",

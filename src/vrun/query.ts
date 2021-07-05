@@ -1,5 +1,7 @@
-import { ref, watch } from "vue";
+import { computed, ref, watch } from "vue";
+import _ from "lodash";
 import { plugin } from "./plugin";
+import { get } from "./config";
 import { Log } from "./util";
 
 const logger = Log.getLogger("query");
@@ -27,6 +29,12 @@ watch(query, (queryStr) => {
   }
 });
 
+const debounceFunc = computed(() =>
+  _.debounce((searchword) => {
+    curPlugin.value.search?.(searchword);
+  }, curPlugin.value.debounce || get("app.debounce"))
+);
+
 // watch keyword and searchword to execute query action
 watch([keyword, searchword], ([keyword, searchword], [oldkeyword]) => {
   if (keyword !== oldkeyword) {
@@ -35,6 +43,6 @@ watch([keyword, searchword], ([keyword, searchword], [oldkeyword]) => {
     logger.trace("curPlugin changed from %s to %s", oldkeyword, keyword);
     curPlugin.value.afterEnter?.();
   }
-  curPlugin.value.search?.(searchword);
+  debounceFunc.value(searchword);
   logger.trace("search with %s", searchword);
 });

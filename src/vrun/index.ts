@@ -5,6 +5,7 @@ import * as vquery from "./query";
 import * as vitem from "./item";
 import * as vinput from "./input";
 import * as vmatch from "./match";
+import * as vwindow from "./window";
 import * as vutil from "./util";
 
 const vrun = {
@@ -15,6 +16,7 @@ const vrun = {
   ...vitem,
   ...vinput,
   ...vmatch,
+  ...vwindow,
   ...vutil,
 };
 

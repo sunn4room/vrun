@@ -97,12 +97,16 @@ function createWindow() {
     win.webContents.send("close");
   });
 
-  // win.on("blur", () => {
-  //   win.hide();
-  // });
+  win.on("blur", () => {
+    win.hide();
+  });
 
   win.on("show", () => {
     win.webContents.send("show");
+  });
+
+  win.on("hide", () => {
+    win.webContents.send("hide");
   });
 
   if (process.env.WEBPACK_DEV_SERVER_URL) {

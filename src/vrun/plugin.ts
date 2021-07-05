@@ -1,6 +1,7 @@
 import { VConfigItem, addConfigItem } from "./config";
 import { VItem } from "./item";
 import corePlugin from "./plugins/core";
+import configPlugin from "./plugins/config";
 import { Log } from "./util";
 
 const logger = Log.getLogger("plugin");
@@ -63,3 +64,4 @@ function setPlugin(newPlugin: VPlugin): void {
 }
 
 registerPlugin(corePlugin);
+registerPlugin(configPlugin);

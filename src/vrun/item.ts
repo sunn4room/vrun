@@ -35,16 +35,16 @@ export const visibleItemsNum = computed(() =>
   Math.min(maxVisibleItemsNum.value, items.length)
 );
 
-watch(
-  visibleItemsNum,
-  (num) => {
-    const width = get("cell.width") as number;
-    const height = (get("cell.height") as number) * (1 + num);
-    ipcRenderer.send("setSize", width, height);
-    logger.trace("window resize to:", width, height);
-  },
-  { immediate: true }
-);
+const setSize = () => {
+  const width = get("cell.width") as number;
+  const height = (get("cell.height") as number) * (1 + visibleItemsNum.value);
+  ipcRenderer.send("setSize", width, height);
+  logger.trace("window resize to:", width, height);
+};
+
+watch(visibleItemsNum, setSize, { immediate: true });
+
+watch(() => [get("cell.width"), get("cell.height")], setSize);
 
 export const selectIdx = ref(0);
 

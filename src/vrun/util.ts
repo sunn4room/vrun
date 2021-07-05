@@ -19,7 +19,7 @@ enum Color {
 }
 
 export class Log {
-  static defaultLevel: Level = Level.debug;
+  static defaultLevel: Level = Level.trace;
 
   static setDefaultLevel(level: Level): void {
     Log.defaultLevel = level;

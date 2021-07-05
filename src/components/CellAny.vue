@@ -14,6 +14,7 @@ export default defineComponent({
       fontSize: vrun.get("cell.height") * 0.3 + "px",
       color: vrun.get("color.foreground2"),
       padding: vrun.get("cell.height") * 0.2 + "px",
+      maxWidth: vrun.get("cell.width") * 0.3 + "px",
     }));
 
     return {
@@ -22,3 +23,11 @@ export default defineComponent({
   },
 });
 </script>
+
+<style scoped>
+.cell_any {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+</style>

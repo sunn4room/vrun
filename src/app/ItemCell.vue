@@ -49,6 +49,7 @@ import Cell from "@/components/Cell.vue";
 import CellAny from "@/components/CellAny.vue";
 import CellSwitch from "@/components/CellSwitch.vue";
 import CellSlider from "@/components/CellSlider.vue";
+import CellColor from "@/components/CellColor.vue";
 import CellImg from "@/components/CellImg.vue";
 
 export default defineComponent({
@@ -58,6 +59,7 @@ export default defineComponent({
     CellAny,
     CellSwitch,
     CellSlider,
+    CellColor,
     CellImg,
   },
   props: {
@@ -150,5 +152,12 @@ export default defineComponent({
 .message_input {
   position: absolute;
   outline: none;
+}
+
+.item_name,
+.item_description {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 </style>

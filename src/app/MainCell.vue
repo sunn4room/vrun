@@ -1,5 +1,5 @@
 <template>
-  <cell id="main_cell">
+  <cell id="main_cell" :style="mainCellStyle">
     <template v-slot:head>
       <cell-img id="plugin_icon" :value="curPlugin.icon" />
     </template>

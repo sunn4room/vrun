@@ -53,10 +53,14 @@ function createWindow() {
   });
 
   ipcMain.on("setSize", (event, width: number, height: number) => {
+    width = Math.trunc(width);
+    height = Math.trunc(height);
     win.setSize(width, height);
   });
 
   ipcMain.on("setPosition", (event, x: number, y: number) => {
+    x = Math.trunc(x);
+    y = Math.trunc(y);
     win.setPosition(x, y);
   });
 

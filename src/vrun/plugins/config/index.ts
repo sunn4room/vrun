@@ -3,7 +3,7 @@ import logo from "@/assets/vrun.png";
 import { VItem } from "../../item";
 
 export default {
-  uuid: "c898481b-5510-4487-87f6-699378ad0f1c",
+  namespace: "vrun",
   name: "config",
   icon: logo,
   keyword: "config",

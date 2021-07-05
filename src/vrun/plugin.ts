@@ -7,7 +7,7 @@ import { Log } from "./util";
 const logger = Log.getLogger("plugin");
 
 interface VPlugin {
-  uuid: string;
+  namespace: string;
   name: string;
   icon: string;
   keyword: string;
@@ -53,7 +53,7 @@ export function registerPlugin(newPlugin: VPlugin): void {
   }
   for (const item of newPlugin.configItems || []) {
     // add config item name prefix
-    item.name = `plugin.${newPlugin.uuid}.${item.name}`;
+    item.name = `plugin.${newPlugin.namespace}.${newPlugin.name}.${item.name}`;
     addConfigItem(item);
   }
 }

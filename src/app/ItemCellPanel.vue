@@ -2,6 +2,7 @@
   <item-cell
     v-for="n in maxVisibleItemsNum"
     :key="n"
+    :index="n - 1"
     :style="visibleStartIdx + n - 1 === selectIdx ? selectItemStyle : undefined"
     v-show="n <= visibleItemsNum"
     :item="n > visibleItemsNum ? nullItem : items[visibleStartIdx + n - 1]"
@@ -11,6 +12,7 @@
     ref="selectInput"
     v-model="selectInputStr"
     @input="whenSelectInput"
+    @keyup.enter="onEnter"
   />
   <div id="scrollbar" :style="scrollbarStyle" />
 </template>
@@ -94,6 +96,7 @@ export default defineComponent({
       selectInput: vrun.selectInput,
       selectInputStr: vrun.selectInputStr,
       whenSelectInput,
+      onEnter: vrun.onEnter,
     };
   },
 });

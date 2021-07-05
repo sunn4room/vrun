@@ -140,7 +140,7 @@ const buildinConfigItems: VConfigItem[] = [
   },
   {
     name: "color.foreground3",
-    value: "red",
+    value: "#409eff",
     description: "the theme color of app, example red, green...",
   },
   {

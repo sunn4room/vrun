@@ -12,10 +12,11 @@
         ref="typeInput"
         v-model="typeInputStr"
         @input="whenTypeInput"
+        @keyup.enter="onEnter"
       />
     </template>
     <template v-slot:tail>
-      <cell-string id="plugin_name" :value="curPlugin.name" />
+      <cell-any id="plugin_name" :value="curPlugin.name" />
     </template>
   </cell>
 </template>
@@ -25,14 +26,14 @@ import { computed, defineComponent } from "vue";
 import vrun from "@/vrun";
 import Cell from "@/components/Cell.vue";
 import CellImg from "@/components/CellImg.vue";
-import CellString from "@/components/CellString.vue";
+import CellAny from "@/components/CellAny.vue";
 
 export default defineComponent({
   name: "MainCell",
   components: {
     Cell,
     CellImg,
-    CellString,
+    CellAny,
   },
   setup() {
     const mainCellStyle = computed(() => ({
@@ -88,6 +89,7 @@ export default defineComponent({
       mainCellStyle,
       typeInputStyle,
       whenTypeInput,
+      onEnter: vrun.onEnter,
     };
   },
 });

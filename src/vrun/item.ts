@@ -1,8 +1,9 @@
-import { reactive, computed, watch, ref } from "vue";
+import { reactive, computed, watch, ref, Ref } from "vue";
 import { ipcRenderer } from "electron";
 import { get } from "./config";
 import { curPlugin } from "./query";
 import { Log } from "./util";
+import vrun from ".";
 
 const logger = Log.getLogger("item");
 
@@ -25,6 +26,7 @@ export function setItems(itemsArray: VItem[]) {
   items.push(...itemsArray);
   selectIdx.value = 0;
   visibleStartIdx.value = 0;
+  logger.debug("items:", itemsArray);
 }
 
 export const maxVisibleItemsNum = computed(() => get("item.max"));
@@ -47,6 +49,11 @@ watch(
 export const selectIdx = ref(0);
 
 export const visibleStartIdx = ref(0);
+
+export function setPosition(selectIndex: number, startIndex: number): void {
+  selectIdx.value = selectIndex;
+  visibleStartIdx.value = startIndex;
+}
 
 export const visibleEndIdx = computed(
   () => visibleStartIdx.value + visibleItemsNum.value
@@ -92,4 +99,35 @@ export function onExit(): void {
   if (items.length !== 0) {
     curPlugin.value.exit?.(items[selectIdx.value]);
   }
+}
+
+export const messageInputs: Ref<HTMLInputElement | undefined>[] = [];
+export const messageInputStrs: Ref<string>[] = [];
+
+export function getUserInput(defaultStr = ""): Promise<string> {
+  return new Promise<string>((resolve, reject) => {
+    if (items.length === 0) {
+      reject("NoneItems");
+    } else {
+      messageInputStrs[selectIdx.value - visibleStartIdx.value].value =
+        defaultStr;
+      const input =
+        messageInputs[selectIdx.value - visibleStartIdx.value].value!;
+      input.onkeyup = (e) => {
+        if (e.key === "Escape") {
+          reject("Escape");
+          vrun.focusSelectInput();
+        } else if (e.key === "Enter") {
+          resolve(
+            messageInputStrs[selectIdx.value - visibleStartIdx.value].value
+          );
+          vrun.focusSelectInput();
+        }
+      };
+      input.onblur = () => {
+        reject("Blur");
+      };
+      input.focus();
+    }
+  });
 }
